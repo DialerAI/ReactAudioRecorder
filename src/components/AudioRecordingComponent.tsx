@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import type { Props } from "./interfaces";
 import useAudioRecorder from "../hooks/useAudioRecorder";
 
@@ -10,6 +10,11 @@ import saveSVG from "../icons/save.svg";
 import stopSVG from "../icons/stop.svg";
 import discardSVG from "../icons/discard.svg";
 import "../styles/audio-recorder.css";
+
+const LiveAudioVisualizer = React.lazy(async () => {
+  const { LiveAudioVisualizer } = await import("react-audio-visualize");
+  return { default: LiveAudioVisualizer };
+});
 
 /**
  * Usage: https://github.com/samhirtarif/react-audio-recorder#audiorecorder-component
@@ -22,6 +27,7 @@ import "../styles/audio-recorder.css";
  * @prop `onNotAllowedOrFound`: A method that gets called when the getUserMedia promise is rejected. It receives the DOMException as its input.
  * @prop `downloadOnSavePress` If set to `true` the file gets downloaded when save recording is pressed. Defaults to `false`
  * @prop `downloadFileExtension` File extension for the audio filed that gets downloaded. Defaults to `mp3`. Allowed values are `mp3`, `wav` and `webm`
+ * @prop `showVisualizer` Displays a waveform visualization for the audio when set to `true`. Defaults to `false`
  * @prop `classes` Is an object with attributes representing classes for different parts of the component
  */
 const AudioRecorder: (props: Props) => ReactElement = ({
@@ -31,6 +37,7 @@ const AudioRecorder: (props: Props) => ReactElement = ({
   audioTrackConstraints,
   downloadOnSavePress = false,
   downloadFileExtension = "webm",
+  showVisualizer = false,
   mediaRecorderOptions,
   classes,
 }: Props) => {
@@ -42,6 +49,7 @@ const AudioRecorder: (props: Props) => ReactElement = ({
     isRecording,
     isPaused,
     recordingTime,
+    mediaRecorder,
   } =
     recorderControls ??
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -153,9 +161,41 @@ const AudioRecorder: (props: Props) => ReactElement = ({
         {Math.floor(recordingTime / 60)}:
         {String(recordingTime % 60).padStart(2, "0")}
       </span>
+      {showVisualizer ? (
+        <span
+          className={`audio-recorder-visualizer ${
+            !isRecording ? "display-none" : ""
+          }`}
+        >
+          {mediaRecorder && (
+            <Suspense fallback={<></>}>
+              <LiveAudioVisualizer
+                mediaRecorder={mediaRecorder}
+                barWidth={2}
+                gap={2}
+                width={140}
+                height={30}
+                fftSize={512}
+                maxDecibels={-10}
+                minDecibels={-80}
+                smoothingTimeConstant={0.4}
+              />
+            </Suspense>
+          )}
+        </span>
+      ) : (
+        <span
+          className={`audio-recorder-status ${
+            !isRecording ? "display-none" : ""
+          } ${classes?.AudioRecorderStatusClass ?? ""}`}
+        >
+          <span className="audio-recorder-status-dot"></span>
+          Recording
+        </span>
+      )}
       <img
         src={isPaused ? resumeSVG : pauseSVG}
-        className={`audio-recorder-options ml-auto ${
+        className={`audio-recorder-options ${
           !isRecording ? "display-none" : ""
         } ${classes?.AudioRecorderPauseResumeClass ?? ""}`}
         onClick={togglePauseResume}

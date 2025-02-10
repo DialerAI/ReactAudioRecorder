@@ -4,7 +4,7 @@ An audio recording helper for React. Provides a component and a hook to help wit
 
 [![NPM downloads][npm-download-img]][npm-download-url]
 [![Run ESlint][eslint-img]][eslint-url]
-[![Run Unit tests][test-img]][test-url] 
+[![Run Unit tests][test-img]][test-url]
 
 [npm-download-img]: https://img.shields.io/npm/dm/react-audio-voice-recorder.svg?style=round-square
 [npm-download-url]: https://www.npmjs.com/package/react-audio-voice-recorder
@@ -47,12 +47,12 @@ const addAudioElement = (blob) => {
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AudioRecorder 
+    <AudioRecorder
       onRecordingComplete={addAudioElement}
       audioTrackConstraints={{
         noiseSuppression: true,
         echoCancellation: true,
-      }} 
+      }}
       downloadOnSavePress={true}
       downloadFileExtension="webm"
     />
@@ -67,6 +67,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 | **`onNotAllowedOrFound`** | This gets called when the `getUserMedia` promise is rejected. It takes the resultant `DOMException` as its parameter | N/A | Yes
 | **`downloadOnSavePress`**  | A `boolean` value that determines if the recording should be downloaded when "Save recording" option is pressed | `false` | Yes |
 | **`downloadFileExtension`**  | The file extension to be used for the downloaded file. Allowed values are `webm`, `mp3` and `wav`. In order to use `mp3` or `wav` please ensure that your website is [cross-origin isolated](https://web.dev/cross-origin-isolation-guide/). [Further reading](https://web.dev/coop-coep/) | `webm` | Yes |
+| **`showVisualizer`**  | Displays a waveform visualization for the audio when set to `true` | `false` | Yes |
 | **`classes`** | This allows class names to be passed to modify the styles for the entire component or specific portions of it | N/A | Yes |
 
 **NOTE: In order for `mp3` and `wav` downloading to work properly, your website needs to be [cross-origin isolated](https://web.dev/cross-origin-isolation-guide/). This is necessary because this package uses [FFmpeg](https://www.npmjs.com/package/@ffmpeg/ffmpeg) which internally uses `SharedArrayBuffer` that requires cross-origin isolation**
@@ -138,7 +139,7 @@ const ExampleComponent = () => {
 
   return (
     <div>
-      <AudioRecorder 
+      <AudioRecorder
         onRecordingComplete={(blob) => addAudioElement(blob)}
         recorderControls={recorderControls}
       />

@@ -69,6 +69,7 @@
     "vite-plugin-dts": "^1.4.1"
   },
   "dependencies": {
-    "@ffmpeg/ffmpeg": "^0.12.10"
+    "@ffmpeg/ffmpeg": "^0.12.10",
+    "react-audio-visualize": "github:eadwinCode/react-audio-visualize#master"
   }
 }
