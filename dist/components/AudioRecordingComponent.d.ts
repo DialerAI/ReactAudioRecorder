@@ -11,6 +11,7 @@ import type { Props } from "./interfaces";
  * @prop `onNotAllowedOrFound`: A method that gets called when the getUserMedia promise is rejected. It receives the DOMException as its input.
  * @prop `downloadOnSavePress` If set to `true` the file gets downloaded when save recording is pressed. Defaults to `false`
  * @prop `downloadFileExtension` File extension for the audio filed that gets downloaded. Defaults to `mp3`. Allowed values are `mp3`, `wav` and `webm`
+ * @prop `showVisualizer` Displays a waveform visualization for the audio when set to `true`. Defaults to `false`
  * @prop `classes` Is an object with attributes representing classes for different parts of the component
  */
 declare const AudioRecorder: (props: Props) => ReactElement;
